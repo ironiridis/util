@@ -46,6 +46,14 @@ func (fw *FullWriter) WriteBytes(b []byte, merr error) error {
 	return nil
 }
 
+// Close will run Close on the underlying Writer if it is a WriteCloser.
+func (fw *FullWriter) Close() error {
+	if c, ok := fw.W.(io.Closer); ok {
+		return c.Close()
+	}
+	return nil
+}
+
 // BinWrite calls m.MarshalBinary() and writes the result to w.
 func BinWrite(w io.Writer, m encoding.BinaryMarshaler) error {
 	fw := &FullWriter{W: w}
